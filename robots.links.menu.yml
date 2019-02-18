@@ -1,0 +1,14 @@
+
+# Robots instruction menu items definition
+entity.robots_instruction.collection:
+  title: 'Robots instruction list'
+  route_name: entity.robots_instruction.collection
+  description: 'List Robots instruction entities'
+  parent: system.admin_structure
+  weight: 100
+
+robots_instruction.admin.structure.settings:
+  title: 'Robots instruction settings'
+  description: 'Configure Robots instruction entities'
+  route_name: robots_instruction.settings
+  parent: system.admin_structure

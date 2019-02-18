@@ -1,0 +1,54 @@
+robots_instruction.list:
+  path: '/admin/config/search/robots_instruction'
+  defaults:
+    _entity_list: 'robots_instruction'
+    _title: 'Robots instruction'
+  requirements:
+    _permission: 'administer robots instruction entities'
+
+entity.robots_instruction.canonical:
+  path: '/admin/config/search/robots_instruction/edit/{robots_instruction}'
+  defaults:
+    _entity_form: 'robots_instruction.edit'
+    _title: 'Edit robots instruction'
+  requirements:
+    _entity_access: 'robots_instruction.update'
+
+robots_instruction.add:
+  path: '/admin/config/search/robots_instruction/add'
+  defaults:
+    _entity_form: 'robots_instruction.default'
+    _title: 'Add robots instruction'
+  requirements:
+    _entity_create_access: 'robots_instruction'
+
+entity.robots_instruction.edit_form:
+  path: '/admin/config/search/robots_instruction/edit/{robots_instruction}'
+  defaults:
+    _entity_form: 'robots_instruction.edit'
+    _title: 'Edit robots instruction'
+  requirements:
+    _entity_access: 'robots_instruction.update'
+
+entity.robots_instruction.delete_form:
+  path: '/admin/config/search/robots_instruction/delete/{robots_instruction}'
+  defaults:
+    _entity_form: 'robots_instruction.delete'
+    _title: 'Delete robots instruction'
+  requirements:
+    _entity_access: 'robots_instruction.delete'
+
+#entity.robots_instruction.multiple_delete_confirm:
+#  path: '/admin/config/search/robots_instruction/delete'
+#  defaults:
+#    _form: '\Drupal\robots\Form\RobotsInstructionDeleteMultipleForm'
+#  requirements:
+#    _permission: 'administer robots instruction'
+
+robots_instruction.settings:
+  path: '/admin/config/search/robots_instruction/settings'
+  defaults:
+    _form: '\Drupal\robots\Form\RobotsInstructionSettingsForm'
+    _title: 'Settings'
+  requirements:
+    _permission: 'administer robots instruction entities' #@todo settings

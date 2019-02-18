@@ -1,0 +1,19 @@
+add robots instruction entities:
+  title: 'Create new Robots instruction entities'
+
+administer robots instruction entities:
+  title: 'Administer Robots instruction entities'
+  description: 'Allow to access the administration form to configure Robots instruction entities.'
+  restrict access: true
+
+delete robots instruction entities:
+  title: 'Delete Robots instruction entities'
+
+edit robots instruction entities:
+  title: 'Edit Robots instruction entities'
+
+view published robots instruction entities:
+  title: 'View published Robots instruction entities'
+
+view unpublished robots instruction entities:
+  title: 'View unpublished Robots instruction entities'

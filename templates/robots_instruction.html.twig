@@ -1,0 +1,22 @@
+{#
+/**
+ * @file robots_instruction.html.twig
+ * Default theme implementation to present Robots instruction data.
+ *
+ * This template is used when viewing Robots instruction pages.
+ *
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ * - attributes: HTML attributes for the container element.
+ *
+ * @see template_preprocess_robots_instruction()
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes.addClass('robots_instruction') }}>
+  {% if content %}
+    {{- content -}}
+  {% endif %}
+</div>

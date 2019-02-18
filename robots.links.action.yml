@@ -1,0 +1,5 @@
+entity.robots_instruction.add_form:
+  route_name: entity.robots_instruction.add_form
+  title: 'Add Robots instruction'
+  appears_on:
+    - entity.robots_instruction.collection

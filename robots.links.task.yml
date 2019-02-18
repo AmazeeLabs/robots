@@ -1,0 +1,22 @@
+# Robots instruction routing definition
+robots_instruction.settings_tab:
+  route_name: robots_instruction.settings
+  title: 'Settings'
+  base_route: robots_instruction.settings
+
+entity.robots_instruction.canonical:
+  route_name: entity.robots_instruction.canonical
+  base_route: entity.robots_instruction.canonical
+  title: 'View'
+
+entity.robots_instruction.edit_form:
+  route_name: entity.robots_instruction.edit_form
+  base_route: entity.robots_instruction.canonical
+  title: 'Edit'
+
+entity.robots_instruction.delete_form:
+  route_name:  entity.robots_instruction.delete_form
+  base_route:  entity.robots_instruction.canonical
+  title: Delete
+  weight: 10
+

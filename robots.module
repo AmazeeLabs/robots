@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains robots.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function robots_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the robots module.
+    case 'help.page.robots':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Merge robots.txt with Sitemap and custom instructions.') . '</p>';
+      return $output;
+
+    default:
+  }
+}

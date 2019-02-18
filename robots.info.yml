@@ -1,0 +1,5 @@
+name: 'Robots'
+type: module
+description: 'Merge default robots.txt with Sitemap and custom instructions.'
+core: 8.x
+package: 'Other'

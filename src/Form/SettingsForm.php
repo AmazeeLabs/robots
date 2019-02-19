@@ -65,6 +65,8 @@ class SettingsForm extends ConfigFormBase {
     // and propose to delete it as it will prevent RobotsTxtController access.
     // This is mentioned in the system wide 'Status report' by RobotsTxt,
     // so we are just adding context here with delete and compare features (WIP).
+
+    $availableSitemaps = $this->robotsConfiguration->getEnabledSitemapModules();
     $form['robots_txt_file_status'] = [
       '#type' => 'item',
       '#title' => $this->t('Robots.txt file status'),
@@ -75,7 +77,21 @@ class SettingsForm extends ConfigFormBase {
       '#title' => $this->t('Include Sitemap'),
       '#description' => $this->getSitemapDescription(),
       '#default_value' => $config->get('include_sitemap'),
-      '#disabled' => empty($this->robotsConfiguration->getEnabledSitemapModules()),
+      // @todo add option for a custom sitemap.
+      '#disabled' =>  count($availableSitemaps) !== 1,
+    ];
+    $form['sitemap_source'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Sitemap source'),
+      '#options' => $availableSitemaps,
+      '#default_value' => $config->get('sitemap_source'),
+      '#states' => [
+        'visible' => [
+          ':input[name="include_sitemap"]' => ['checked' => TRUE],
+        ],
+      ],
+      // @todo add option for a custom sitemap.
+      '#disabled' => count($availableSitemaps) !== 1,
     ];
     $form['include_custom_instructions'] = [
       '#type' => 'checkbox',
@@ -113,8 +129,11 @@ class SettingsForm extends ConfigFormBase {
 
     $this->config('robots.settings')
       ->set('include_sitemap', $form_state->getValue('include_sitemap'))
+      ->set('sitemap_source', $form_state->getValue('sitemap_source'))
       ->set('include_custom_instructions', $form_state->getValue('include_custom_instructions'))
       ->save();
+
+    $this->robotsConfiguration->updateConfigurationContent();
   }
 
   private function getRobotsTxtFileStatus() {
@@ -142,19 +161,14 @@ class SettingsForm extends ConfigFormBase {
     $enabledModules = $this->robotsConfiguration->getEnabledSitemapModules();
 
     if (empty($enabledModules)) {
-      $result = $this->t('No Sitemap module was found. You can install @simple_sitemap_link or @sitemap_link.', [
-        '@simple_sitemap_link' => 'Simple sitemap', // @todo link.
-        '@sitemap_link' => 'Sitemap', // @todo link
+      $result = $this->t('No Sitemap module was found. You can install @simple_sitemap_link or @xmlsitemap_link.', [
+        '@simple_sitemap_link' => 'Simple Sitemap', // @todo link.
+        '@xmlsitemap_link' => 'XML Sitemap', // @todo link
       ]);
     }
 
     if (count($enabledModules) > 1) {
       $result = $this->t("There shouldn't be more than one Sitemap module installed.");
-    }
-    else {
-      $result = $this->t('The @sitemap_module module will be used for the source.', [
-        '@sitemap_module' => $enabledModules[0],
-      ]);
     }
 
     return $result;

@@ -56,16 +56,49 @@ class RobotsConfiguration {
   /**
    * Updates the RobotsTxt configuration content based on the Robots settings.
    *
+   * Saving in the configuration is preferred to hook_alter()
+   * so we are still able to edit it manually.
+   *
    * @return string
    */
   public function updateConfigurationContent() {
-    // Saving in the configuration is preferred to hook_alter()
-    // so we are still able to edit it manually.
-    $content = '';
-    // @todo implement based on the Robots settings:
-    // @todo getRobotsInstructions()
-    // @todo getSitemapRobotsInstructions()
+    $robotsSettings = $this->configFactory->get('robots.settings');
+
+    $instructions = [];
+    // Sitemap instructions.
+    if (
+      $robotsSettings->get('include_sitemap') === 1 &&
+      !empty($robotsSettings->get('sitemap_source'))
+    ) {
+      $instructions['sitemap'] = $this->getSitemapRobotsInstructions($robotsSettings->get('sitemap_source'));
+    }
+
+    // Custom content entities instructions.
+    if ($robotsSettings->get('include_sitemap')) {
+      $instructions['content_entities'] = $this->getRobotsInstructions();
+    }
+
+    // Current instructions.
+    $instructions['current_content'] = explode("\n", $this->getConfigurationContent());
+
+    $content = $this->mergeInstructions($instructions);
     $this->configFactory->getEditable('robotstxt.settings')->set('content', $content)->save();
+  }
+
+  /**
+   * Merges the several instructions sources as a string.
+   *
+   * @param array $instructions
+   *   List of sources containing list of instructions.
+   *
+   * @return string
+   */
+  private function mergeInstructions(array $instructions) {
+    $result = '';
+    // @todo implement content_entities
+    $mergedInstructions = [];
+    $result = implode("\n", $instructions['current_content']);
+    return $result;
   }
 
   /**
@@ -115,24 +148,55 @@ class RobotsConfiguration {
   public function getEnabledSitemapModules() {
     $result = [];
     if ($this->moduleHandler->moduleExists('simple_sitemap')) {
-      $result[] = 'simple_sitemap';
+      $result['simple_sitemap'] = 'Simple Sitemap';
     }
-    elseif ($this->moduleHandler->moduleExists('sitemap')) {
-      $result[] = 'sitemap';
+    elseif ($this->moduleHandler->moduleExists('xmlsitemap')) {
+      $result['xmlsitemap'] = 'XML Sitemap';
     }
     return $result;
   }
 
   /**
-   * Returns a list of robots.txt instructions based on a sitemap module.
+   * Returns a list of robots.txt instructions based on a sitemap source.
    *
-   * @param string $module
+   * @param string $source
    *
    * @return array
    */
-  public function getSitemapRobotsInstructions($module) {
+  public function getSitemapRobotsInstructions($source) {
     $result = [];
-    // @todo implement
+    switch ($source) {
+      case 'simple_sitemap':
+        $result = $this->getSimpleSitemapLinks();
+        break;
+      case 'xmlsitemap':
+        // @todo implement
+        break;
+      case 'custom':
+        // @todo implement
+        break;
+    }
+    return $result;
+  }
+
+  private function getSimpleSitemapLinks() {
+    $result = [];
+    // @todo use the simple_sitemap.generator service
+    // so we can include variants properly.
+    // Currently extracting urls from the raw result.
+    // Get published sitemap instances.
+    $query = \Drupal::database()->select('simple_sitemap', 'sm')
+      ->condition('status', 1)
+      ->fields('sm')
+      ->execute();
+    foreach ($query as $row) {
+      if (!empty($row->sitemap_string)) {
+        $sitemap = simplexml_load_string($row->sitemap_string);
+        foreach ($sitemap->url as $url_list) {
+          $result[] = (string) $url_list->loc;
+        }
+      }
+    }
     return $result;
   }
 

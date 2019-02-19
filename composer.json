@@ -10,5 +10,7 @@
     "issues": "https://www.drupal.org/project/issues/robots",
     "source": "http://cgit.drupalcode.org/robots"
   },
-  "require": { }
+  "require": {
+    "drupal/robotstxt": "~1.2"
+  }
 }

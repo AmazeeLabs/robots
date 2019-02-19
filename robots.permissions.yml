@@ -17,3 +17,6 @@ view published robots instruction entities:
 
 view unpublished robots instruction entities:
   title: 'View unpublished Robots instruction entities'
+
+administer robots configuration:
+  title: 'Administer site wide Robots configuration'

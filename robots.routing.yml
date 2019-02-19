@@ -61,6 +61,4 @@ robots.settings:
     _form: '\Drupal\robots\Form\SettingsForm'
     _title: 'Robots Settings'
   requirements:
-    # Inherit from robots.txt module
-    # @todo maybe distinct manual edition from this configuration.
-    _permission: 'administer robots.txt'
+    _permission: 'administer robots configuration'

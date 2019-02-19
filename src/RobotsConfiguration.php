@@ -94,11 +94,67 @@ class RobotsConfiguration {
    * @return string
    */
   private function mergeInstructions(array $instructions) {
-    $result = '';
-    // @todo implement content_entities
-    $mergedInstructions = [];
-    $result = implode("\n", $instructions['current_content']);
+    $mergedInstructions = $instructions['current_content'];
+    $allAgentsLineIndex = $this->getAllAgentsLineIndex($mergedInstructions);
+    // @todo improve merge logic with a text manipulation based algorithm / library.
+
+    // Insert Sitemap instructions right after 'User-agent: *'
+    if (isset($instructions['sitemap']) && !empty($instructions['sitemap'])) {
+      if (!is_null($allAgentsLineIndex)) {
+        // All the "Sitemap" entries must be removed first because in this
+        // case we rely on the source only and not on manual edition.
+        $this->removeSitemapInstructions($mergedInstructions);
+        array_splice($mergedInstructions, $allAgentsLineIndex + 1, 0, $instructions['sitemap']);
+      }
+    }
+    // Or remove them all if sitemap instructions is not desired.
+    else {
+      $this->removeSitemapInstructions($mergedInstructions);
+    }
+
+    // Custom content entities instructions.
+    if (isset($instructions['content_entities']) && !empty($instructions['content_entities'])) {
+      // @todo implement content_entities
+      // Content entities must be compared for insertion
+      // as there can be manual or automated entries.
+    }
+
+    $result = implode("\n", $mergedInstructions);
     return $result;
+  }
+
+  /**
+   * Returns the 'User-agent: *' line index.
+   *
+   * @param array $instructions
+   *
+   * @return int|null
+   */
+  private function getAllAgentsLineIndex(array $instructions) {
+     $result = NULL;
+     $line = 0;
+     while ($line < count($instructions)) {
+       if(strpos(strtolower($instructions[$line]), 'user-agent: *') !== false) {
+         return $line;
+       }
+       ++$line;
+     }
+     return $result;
+  }
+
+  /**
+   * Removes all the sitemap instructions.
+   *
+   * @param $instructions
+   */
+  private function removeSitemapInstructions(array &$instructions) {
+    $line = 0;
+    foreach ($instructions as $instruction) {
+      if (strpos(trim(strtolower($instruction)), 'sitemap:') === 0) {
+        unset($instructions[$line]);
+      }
+      ++$line;
+    }
   }
 
   /**
@@ -167,7 +223,7 @@ class RobotsConfiguration {
     $result = [];
     switch ($source) {
       case 'simple_sitemap':
-        $result = $this->getSimpleSitemapLinks();
+        $result = $this->getSimpleSitemapInstructions();
         break;
       case 'xmlsitemap':
         // @todo implement
@@ -179,7 +235,7 @@ class RobotsConfiguration {
     return $result;
   }
 
-  private function getSimpleSitemapLinks() {
+  private function getSimpleSitemapInstructions() {
     $result = [];
     // @todo use the simple_sitemap.generator service
     // so we can include variants properly.
@@ -193,7 +249,8 @@ class RobotsConfiguration {
       if (!empty($row->sitemap_string)) {
         $sitemap = simplexml_load_string($row->sitemap_string);
         foreach ($sitemap->url as $url_list) {
-          $result[] = (string) $url_list->loc;
+          $sitemapUrl = (string) $url_list->loc;
+          $result[] = 'Sitemap: ' . $sitemapUrl;
         }
       }
     }

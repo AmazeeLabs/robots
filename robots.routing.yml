@@ -41,14 +41,26 @@ entity.robots_instruction.delete_form:
 #entity.robots_instruction.multiple_delete_confirm:
 #  path: '/admin/config/search/robots_instruction/delete'
 #  defaults:
-#    _form: '\Drupal\robots\Form\RobotsInstructionDeleteMultipleForm'
+#    _form: '\Drupal\robots\Form\RedirectDeleteMultipleForm'
 #  requirements:
 #    _permission: 'administer robots instruction'
 
+# Content entity settings.
 robots_instruction.settings:
   path: '/admin/config/search/robots_instruction/settings'
   defaults:
     _form: '\Drupal\robots\Form\RobotsInstructionSettingsForm'
-    _title: 'Settings'
+    _title: 'Robots Instruction Settings'
   requirements:
-    _permission: 'administer robots instruction entities' #@todo settings
+    _permission: 'administer robots instruction entities'
+
+# Module site wide settings.
+robots.settings:
+  path: '/admin/config/search/robots/settings'
+  defaults:
+    _form: '\Drupal\robots\Form\SettingsForm'
+    _title: 'Robots Settings'
+  requirements:
+    # Inherit from robots.txt module
+    # @todo maybe distinct manual edition from this configuration.
+    _permission: 'administer robots.txt'

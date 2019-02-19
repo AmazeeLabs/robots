@@ -1,0 +1,4 @@
+services:
+  robots.configuration:
+    class: Drupal\robots\RobotsConfiguration
+    arguments: ['@config.factory', '@module_handler', '@entity_type.manager']
